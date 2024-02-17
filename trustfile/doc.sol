@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract AVXNFT is ERC721 {
+contract DocNFT is ERC721 {
     // Struct to hold the metadata of the NFT
     struct NFTMetadata {
         string cid; // CID of the file in IPFS
@@ -20,7 +20,7 @@ contract AVXNFT is ERC721 {
     uint256 private tokenIdCounter;
 
     // Constructor
-    constructor() ERC721("AVXNFT", "AVX") {}
+    constructor() ERC721("DocNFT", "DOC") {}
 
     // Function to mint a new NFT
     function mintNFT(string memory _cid) external {

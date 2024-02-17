@@ -1,34 +1,38 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Import Avalanche ERC721 contract
-import "./AvalancheERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-// DocumentNFT contract
-contract DocumentNFT is AvalancheERC721 {
-    // Mapping to store IPFS CID associated with each NFT token ID
-    mapping(uint256 => string) private documentCID;
-
-    // Token ID counter
-    uint256 private tokenIdCounter;
-
-    // Event to emit when a new document is minted
-    event DocumentMinted(uint256 tokenId, string cid);
-
-    // Constructor
-    constructor() AvalancheERC721("DocumentNFT", "DOC") {}
-
-    // Function to mint new NFT and upload document to IPFS
-    function mintAndUploadDocument(string memory cid) external returns (uint256) {
-        uint256 tokenId = tokenIdCounter++;
-        documentCID[tokenId] = cid;
-        _mint(msg.sender, tokenId);
-        emit DocumentMinted(tokenId, cid);
-        return tokenId;
+contract AVXNFT is ERC721 {
+    // Struct to hold the metadata of the NFT
+    struct NFTMetadata {
+        string cid; // CID of the file in IPFS
+        address minter; // Wallet address of the minter
     }
 
-    // Function to get document CID
-    function getDocumentCID(uint256 tokenId) external view returns (string memory) {
-        require(_exists(tokenId), "DocumentNFT: Document does not exist");
-        return documentCID[tokenId];
+    // Mapping from tokenID to NFTMetadata
+    mapping(uint256 => NFTMetadata) public nftMetadata;
+
+    // Event emitted when a new NFT is minted
+    event NFTMinted(uint256 indexed tokenId, string cid, address indexed minter);
+
+    // Counter for generating unique tokenIDs
+    uint256 private tokenIdCounter;
+
+    // Constructor
+    constructor() ERC721("AVXNFT", "AVX") {}
+
+    // Function to mint a new NFT
+    function mintNFT(string memory _cid) external {
+        uint256 newTokenId = tokenIdCounter;
+        tokenIdCounter++;
+
+        nftMetadata[newTokenId] = NFTMetadata({
+            cid: _cid,
+            minter: msg.sender
+        });
+
+        _safeMint(msg.sender, newTokenId);
+        emit NFTMinted(newTokenId, _cid, msg.sender);
     }
 }

@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const fs = require('fs');
 
 
-const web3 = new Web3(''); 
+const web3 = new Web3('https://avalanche-fuji.infura.io/v3/5c6647137bbc40dd9b7d04aa03c7f6c3'); 
 
 
 const contractABI = JSON.parse(fs.readFileSync('YourContractABI.json', 'utf8')); 

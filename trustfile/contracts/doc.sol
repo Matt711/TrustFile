@@ -37,6 +37,6 @@ contract DocNFT is ERC721 {
     }
     function getDocumentCID(uint256 tokenId) external view returns (string memory) {
         require(_exists(tokenId), "DocumentNFT: Document does not exist");
-        return documentCID[tokenId];
+        return NFTMedata.cid;
     }
 }

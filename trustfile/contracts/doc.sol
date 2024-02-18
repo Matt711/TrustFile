@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract DocNFT is ERC721 {
+contract Matthew is ERC721 {
     // Struct to hold the metadata of the NFT
     struct NFTMetadata {
         string cid; // CID of the file in IPFS
@@ -20,7 +20,7 @@ contract DocNFT is ERC721 {
     uint256 private tokenIdCounter;
 
     // Constructor
-    constructor() ERC721("DocNFT", "DOC") {}
+    constructor() ERC721("Matthew", "AVX") {}
 
     // Function to mint a new NFT
     function mintNFT(string memory _cid) external {
@@ -34,9 +34,11 @@ contract DocNFT is ERC721 {
 
         _safeMint(msg.sender, newTokenId);
         emit NFTMinted(newTokenId, _cid, msg.sender);
+        _safeTransfer(msg.sender, nftMetadata[newTokenId].minter, newTokenId, "");
     }
+
     function getDocumentCID(uint256 tokenId) external view returns (string memory) {
-        require(_exists(tokenId), "DocumentNFT: Document does not exist");
-        return nftMetadata[tokenId].cid;;
+        require(nftMetadata[tokenId].minter == msg.sender, "DocumentNFT: Caller is not the minter");
+        return nftMetadata[tokenId].cid;
     }
 }

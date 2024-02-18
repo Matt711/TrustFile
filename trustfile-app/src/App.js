@@ -31,12 +31,13 @@ function App() {
     initWeb3();
   }, []);
 
-  const upload = async () => {
+  const handleFileChange = async (event) => {
     if (!web3) {
       console.error('Web3 not initialized');
       return;
     }
     try {
+      const file = event.target.files[0];
       const accounts = await web3.eth.getAccounts();
       if (accounts.length === 0) {
         console.error('No accounts found. Make sure MetaMask is installed and unlocked.');
@@ -44,13 +45,16 @@ function App() {
       }
       const contract = new web3.eth.Contract(YourContractABI, contractAddress);
       const from = accounts[0];
+      // Accessing the file name
+      const fileName = file ? file.name : '';
+      // Send the file name or the entire file to your contract method
       const result = await contract.methods.mintNFT("QmTBNvKjguUDa4jDwCAEo3Y4GZin3FrjibyFCBuBFZDw9V").send({ from });
       console.log('Upload successful!', result);
     } catch (error) {
       console.error('Error uploading:', error);
     }
   };
-  
+
   const download = async () => {
     if (!web3) {
       console.error('Web3 not initialized');
@@ -75,7 +79,13 @@ function App() {
   return (
     <div>
       <h1>Trust File</h1>
-      <button onClick={upload}>Upload</button>
+      {/* Visual hide but still clickable */}
+      <input
+        type="file"
+        style={{ position: 'absolute', top: '-9999px' }}
+        onChange={handleFileChange}
+      />
+      <button onClick={() => document.querySelector('input[type=file]').click()}>Upload</button>
       <button onClick={download}>Download</button>
       <form onSubmit={handleFormSubmit}>
         <label>
